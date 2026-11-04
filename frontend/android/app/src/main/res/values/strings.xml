@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CycleTracker</string>
+    <string name="title_activity_main">CycleTracker</string>
+    <string name="package_name">com.tracker.menstrualhealth</string>
+    <string name="custom_url_scheme">com.tracker.menstrualhealth</string>
+</resources>

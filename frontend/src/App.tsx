@@ -16,6 +16,9 @@ import {
   type RecommendOut,
   type StoredFile,
   type User,
+  type CycleForecast,
+  type CycleItem,
+  type ExportData,
 } from "./api";
 import { CycleLengthBars, SymptomSparkline, WearableDailyChart } from "./components/Charts";
 import { PhaseCard } from "./components/PhaseCard";
@@ -54,6 +57,7 @@ export default function App() {
   const [password, setPassword] = useState("demopass123");
   const [role, setRole] = useState("athlete");
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -132,6 +136,38 @@ export default function App() {
   const [symA, setSymA] = useState<AnalyticsSymptoms | null>(null);
   const [wearA, setWearA] = useState<AnalyticsWearable | null>(null);
   const [notifList, setNotifList] = useState<NotificationRow[]>([]);
+  const [cycleHistory, setCycleHistory] = useState<CycleItem[]>([]);
+  const [forecastData, setForecastData] = useState<CycleForecast | null>(null);
+  const [exporting, setExporting] = useState(false);
+
+  // Mobile PWA & QR Modal State
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallBanner, setShowInstallBanner] = useState<boolean>(false);
+  const [mobileModalOpen, setMobileModalOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallBanner(true);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstallPWA = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const choice = await deferredPrompt.userChoice;
+    if (choice?.outcome === "accepted") {
+      setShowInstallBanner(false);
+      showToast("App installed to your device!", "success");
+    }
+    setDeferredPrompt(null);
+  };
 
   // User Profile & Biometrics Customization
   const [profileModalOpen, setProfileModalOpen] = useState(false);
@@ -214,10 +250,18 @@ export default function App() {
       const id = uid ?? userId;
       if (!id) return;
       setErr(null);
-      const d = await apiGet<Dashboard>(`/dashboard/${id}`);
-      setDash(d);
-      const r = recFromDashboard(d.latest_recommendation ?? null);
-      if (r) setRec(r);
+      try {
+        const d = await apiGet<Dashboard>(`/dashboard/${id}`);
+        setDash(d);
+        const r = recFromDashboard(d.latest_recommendation ?? null);
+        if (r) setRec(r);
+      } catch (e: unknown) {
+        // If stored user is invalid or not in database, cleanly reset to login state
+        localStorage.removeItem(USER_KEY);
+        localStorage.removeItem(TOKEN_KEY);
+        setUserId(null);
+        setDash(null);
+      }
     },
     [userId],
   );
@@ -237,11 +281,72 @@ export default function App() {
     }
   }, [userId]);
 
+  const loadCycleHistory = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const items = await apiGet<CycleItem[]>(`/cycles/all?user_id=${userId}`);
+      setCycleHistory(items);
+    } catch {
+      // Ignore
+    }
+  }, [userId]);
+
+  const loadForecast = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const f = await apiGet<CycleForecast>(`/analytics/${userId}/forecast`);
+      setForecastData(f);
+    } catch {
+      // Ignore
+    }
+  }, [userId]);
+
+  const handleDeleteCycle = async (cycleId: string) => {
+    if (!userId) return;
+    if (!window.confirm("Are you sure you want to remove this logged cycle?")) return;
+    setBusy(true);
+    try {
+      await apiDelete(`/cycles/${cycleId}?user_id=${userId}`);
+      showToast("Cycle entry deleted", "info");
+      await loadCycleHistory();
+      await loadForecast();
+      await loadDashboard();
+    } catch (e: unknown) {
+      showToast(`Failed to delete cycle: ${String(e)}`, "error");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    if (!userId) return;
+    setExporting(true);
+    try {
+      const data = await apiGet<ExportData>(`/analytics/${userId}/export`);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `cycle_health_data_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("✓ Health data exported successfully (JSON)!", "success");
+    } catch (e: unknown) {
+      showToast(`Failed to export data: ${String(e)}`, "error");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   useEffect(() => {
     if (userId) {
       void loadReminders();
+      void loadCycleHistory();
+      void loadForecast();
     }
-  }, [userId, loadReminders]);
+  }, [userId, loadReminders, loadCycleHistory, loadForecast]);
 
   const handleAddReminder = async (dateStr: string, title: string, category: string) => {
     if (!userId) return;
@@ -396,6 +501,21 @@ export default function App() {
   }, [userId, loadUserFiles]);
 
   const handleAuth = async () => {
+    if (!email.trim()) {
+      setErr("Please enter a valid email address.");
+      showToast("Please enter a valid email address.", "error");
+      return;
+    }
+    if (!password) {
+      setErr("Please enter a password.");
+      showToast("Please enter a password.", "error");
+      return;
+    }
+    if (authMode === "register" && password.length < 4) {
+      setErr("Password should be at least 4 characters long.");
+      showToast("Password should be at least 4 characters long.", "error");
+      return;
+    }
     setBusy(true);
     setErr(null);
     try {
@@ -501,6 +621,8 @@ export default function App() {
       });
       showToast("Cycle entry saved! Forecast updated.", "success");
       await loadDashboard();
+      await loadCycleHistory();
+      await loadForecast();
     } catch (e: unknown) {
       setErr(String(e));
       showToast(String(e), "error");
@@ -657,6 +779,26 @@ export default function App() {
               {t.id === "alerts" && unread > 0 ? `${t.label} (${unread})` : t.label}
             </button>
           ))}
+          <button
+            type="button"
+            className="ghost"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: "0.82rem",
+              padding: "4px 10px",
+              borderRadius: "999px",
+              border: "1px solid rgba(168, 85, 247, 0.4)",
+              background: "rgba(168, 85, 247, 0.14)",
+              color: "#d8b4fe",
+              fontWeight: 600,
+            }}
+            onClick={() => setMobileModalOpen(true)}
+            title="Open on phone or install mobile app"
+          >
+            📱 Mobile App
+          </button>
         </nav>
       </header>
 
@@ -690,14 +832,28 @@ export default function App() {
               <button
                 type="button"
                 className={authMode === "login" ? "primary" : "ghost"}
-                onClick={() => setAuthMode("login")}
+                onClick={() => {
+                  setAuthMode("login");
+                  if (!email) {
+                    setEmail("demo@university.edu");
+                    setPassword("demopass123");
+                  }
+                  setErr(null);
+                }}
               >
                 Sign in
               </button>
               <button
                 type="button"
                 className={authMode === "register" ? "primary" : "ghost"}
-                onClick={() => setAuthMode("register")}
+                onClick={() => {
+                  setAuthMode("register");
+                  if (email === "demo@university.edu") {
+                    setEmail("");
+                    setPassword("");
+                  }
+                  setErr(null);
+                }}
               >
                 Create personal account
               </button>
@@ -705,25 +861,66 @@ export default function App() {
             <h3 style={{ fontSize: "1rem", margin: "0 0 6px" }}>
               {authMode === "login" ? "Sign in to your account" : "Create new account"}
             </h3>
-            <div className="row" style={{ marginTop: 12 }}>
+            <p className="muted" style={{ fontSize: "0.85rem", margin: "0 0 10px" }}>
+              {authMode === "login"
+                ? "Sign in with your registered email and password, or use the pre-filled demo account."
+                : "Enter your email address and pick any password you like (at least 4 characters)."}
+            </p>
+            <div className="row" style={{ marginTop: 12, alignItems: "flex-start" }}>
               <label>
                 Email
-                <input value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                />
               </label>
               <label>
                 Password
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete={authMode === "login" ? "current-password" : "new-password"}
-                />
+                <div style={{ display: "flex", position: "relative", alignItems: "center" }}>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={authMode === "login" ? "Enter your password" : "Create a password"}
+                    autoComplete={authMode === "login" ? "current-password" : "new-password"}
+                    style={{ paddingRight: 40 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    title={showPassword ? "Hide password" : "Show password"}
+                    style={{
+                      position: "absolute",
+                      right: 8,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "1.1rem",
+                      padding: "2px 4px",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {showPassword ? "🙈" : "👁️"}
+                  </button>
+                </div>
+                <span style={{ fontSize: "0.78rem", color: authMode === "register" ? "var(--accent)" : "var(--muted)", marginTop: 2 }}>
+                  {authMode === "register"
+                    ? "Choose any password (click 👁️ to view)"
+                    : "Demo password: demopass123"}
+                </span>
               </label>
               {authMode === "register" ? (
                 <>
                   <label>
                     Display name (optional)
-                    <input value={name} onChange={(e) => setName(e.target.value)} />
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Alex"
+                    />
                   </label>
                   <label>
                     Account role
@@ -734,19 +931,37 @@ export default function App() {
                   </label>
                 </>
               ) : null}
-              <button className="primary" type="button" disabled={busy} onClick={() => void handleAuth()}>
-                {busy ? "Working…" : authMode === "login" ? "Sign in" : "Create account"}
-              </button>
+              <div style={{ alignSelf: "flex-start", marginTop: 24 }}>
+                <button className="primary" type="button" disabled={busy} onClick={() => void handleAuth()}>
+                  {busy ? "Working…" : authMode === "login" ? "Sign in" : "Create account"}
+                </button>
+              </div>
             </div>
             {err ? <p className="error" style={{ marginTop: 12 }}>{err}</p> : null}
           </div>
+        </section>
+      ) : !dash ? (
+        <section className="panel" style={{ textAlign: "center", padding: "60px 20px" }}>
+          <div style={{ fontSize: "2.2rem", marginBottom: "14px" }}>🌸</div>
+          <h2 style={{ fontSize: "1.3rem", margin: "0 0 8px" }}>Loading Your Cycle Dashboard…</h2>
+          <p className="muted" style={{ margin: "0 auto 20px", maxWidth: 440 }}>
+            Syncing biometric vitals, personal rhythm history, and hormone phase predictions.
+          </p>
+          <button
+            type="button"
+            className="ghost"
+            onClick={logout}
+            style={{ fontSize: "0.85rem", padding: "8px 16px" }}
+          >
+            Reset / Switch Account
+          </button>
         </section>
       ) : (
         <>
           <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
               <p className="muted" style={{ margin: 0 }}>
-                Signed in as <strong>{dash?.user.display_name || dash?.user.email || "…"}</strong> ({dash?.user.role ?? "athlete"})
+                Signed in as <strong>{dash?.user?.display_name || dash?.user?.email || "…"}</strong> ({dash?.user?.role ?? "athlete"})
               </p>
               <button
                 type="button"
@@ -791,6 +1006,24 @@ export default function App() {
               <button
                 type="button"
                 className="secondary"
+                style={{
+                  fontSize: "0.82rem",
+                  padding: "6px 12px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "rgba(168, 85, 247, 0.12)",
+                  borderColor: "rgba(168, 85, 247, 0.4)",
+                  color: "#c084fc",
+                  fontWeight: 600,
+                }}
+                onClick={() => setMobileModalOpen(true)}
+              >
+                📱 Mobile App
+              </button>
+              <button
+                type="button"
+                className="secondary"
                 style={{ fontSize: "0.82rem", padding: "6px 12px", display: "inline-flex", alignItems: "center", gap: 6 }}
                 onClick={() => setProfileModalOpen(true)}
               >
@@ -816,18 +1049,18 @@ export default function App() {
                   
                   <div>
                     <strong style={{ fontSize: "0.95rem", color: "var(--text)" }}>
-                      {dash?.user.display_name || "Athlete Biometrics"}
+                      {dash?.user?.display_name || "Athlete Biometrics"}
                     </strong>
                     <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: 2 }}>
-                      {dash?.user.age ? `${dash.user.age} yrs` : "Age unset"} ·{" "}
-                      {dash?.user.height_cm ? `${dash.user.height_cm} cm` : "Height unset"} ·{" "}
-                      {dash?.user.weight_kg ? `${dash.user.weight_kg} kg` : "Weight unset"} ·{" "}
-                      <span style={{ color: "var(--accent)" }}>{dash?.user.training_level ?? "Recreational"}</span>
+                      {dash?.user?.age ? `${dash.user.age} yrs` : "Age unset"} ·{" "}
+                      {dash?.user?.height_cm ? `${dash.user.height_cm} cm` : "Height unset"} ·{" "}
+                      {dash?.user?.weight_kg ? `${dash.user.weight_kg} kg` : "Weight unset"} ·{" "}
+                      <span style={{ color: "var(--accent)" }}>{dash?.user?.training_level ?? "Recreational"}</span>
                     </div>
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  {dash?.user.height_cm && dash?.user.weight_kg ? (
+                  {dash?.user?.height_cm && dash?.user?.weight_kg ? (
                     <span className="bmi-badge">
                       BMI {(dash.user.weight_kg / Math.pow(dash.user.height_cm / 100, 2)).toFixed(1)}
                     </span>
@@ -1100,9 +1333,168 @@ export default function App() {
                 onToggleReminder={handleToggleReminder}
                 onDeleteReminder={handleDeleteReminder}
               />
+              {/* 3-Cycle Future Horizon & Ovulation Window Forecast */}
+              <div className="panel" style={{ background: "linear-gradient(135deg, rgba(244, 114, 182, 0.08) 0%, rgba(131, 153, 88, 0.08) 100%)" }}>
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <h2 style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span>🔮</span> 3-Cycle Hormonal Horizon & Ovulation Forecast
+                    </h2>
+                    <p className="muted" style={{ margin: "4px 0 0" }}>
+                      Statistically projected cycle milestones, fertile windows, and estimated menstruation dates based on your personal cycle rhythm.
+                    </p>
+                  </div>
+                  {forecastData?.regularity_status ? (
+                    <span
+                      style={{
+                        background: "rgba(16, 185, 129, 0.15)",
+                        border: "1px solid rgba(16, 185, 129, 0.3)",
+                        color: "#10b981",
+                        fontSize: "0.82rem",
+                        fontWeight: 600,
+                        padding: "4px 12px",
+                        borderRadius: "999px",
+                      }}
+                    >
+                      {forecastData.regularity_status}
+                    </span>
+                  ) : null}
+                </div>
+
+                {forecastData?.forecasts && forecastData.forecasts.length > 0 ? (
+                  <div className="grid grid-3" style={{ marginTop: 16, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "12px" }}>
+                    {forecastData.forecasts.map((f) => (
+                      <div
+                        key={f.cycle_number}
+                        style={{
+                          background: "var(--panel)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "14px",
+                          padding: "16px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "8px",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <strong style={{ color: "var(--accent)", fontSize: "0.95rem" }}>Cycle #{f.cycle_number} Ahead</strong>
+                          <span className="muted" style={{ fontSize: "0.78rem" }}>~{forecastData.median_cycle_length}d cycle</span>
+                        </div>
+                        <div style={{ borderTop: "1px solid var(--border)", paddingTop: "8px", fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "6px" }}>
+                          <div>
+                            🩸 <strong style={{ color: "#f472b6" }}>Next Period:</strong> {f.period_start} – {f.period_end}
+                          </div>
+                          <div>
+                            ✨ <strong style={{ color: "#38bdf8" }}>Fertile Window:</strong> {f.fertile_window_start} – {f.fertile_window_end}
+                          </div>
+                          <div>
+                            🥚 <strong style={{ color: "#a855f7" }}>Estimated Ovulation:</strong> {f.ovulation_date}
+                          </div>
+                          <div>
+                            🌙 <strong style={{ color: "#f59e0b" }}>Luteal Phase:</strong> from {f.luteal_start}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="muted" style={{ marginTop: 12 }}>
+                    Log at least 1 period start date to generate multi-cycle projections.
+                  </p>
+                )}
+              </div>
+
+              {/* Logged Cycles History & Management Table */}
               <div className="panel">
-                <h2>Historical Periods Logged</h2>
-                {cycA?.period_starts && cycA.period_starts.length > 0 ? (
+                <div className="row" style={{ justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <div>
+                    <h2>Logged Cycles & Period History</h2>
+                    <p className="muted">All recorded period dates with duration, flow rating, and management.</p>
+                  </div>
+                  <button
+                    className="ghost"
+                    type="button"
+                    onClick={() => {
+                      setTab("data");
+                      showToast("Select date and flow in the Daily Log to add a period.", "info");
+                    }}
+                    style={{ fontSize: "0.85rem", padding: "6px 12px" }}
+                  >
+                    + Log New Period
+                  </button>
+                </div>
+
+                {cycleHistory && cycleHistory.length > 0 ? (
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.88rem" }}>
+                      <thead>
+                        <tr style={{ borderBottom: "1px solid var(--border)", textAlign: "left", color: "var(--muted)" }}>
+                          <th style={{ padding: "8px 10px" }}>Start Date</th>
+                          <th style={{ padding: "8px 10px" }}>End Date</th>
+                          <th style={{ padding: "8px 10px" }}>Flow Intensity</th>
+                          <th style={{ padding: "8px 10px" }}>Notes</th>
+                          <th style={{ padding: "8px 10px", textAlign: "right" }}>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cycleHistory.map((c) => {
+                          const flowLabels: Record<number, { label: string; color: string }> = {
+                            1: { label: "Spotting", color: "rgba(244, 114, 182, 0.4)" },
+                            2: { label: "Light", color: "rgba(244, 114, 182, 0.6)" },
+                            3: { label: "Medium", color: "rgba(239, 68, 68, 0.7)" },
+                            4: { label: "Heavy", color: "rgba(220, 38, 38, 0.9)" },
+                          };
+                          const badge = c.flow_intensity ? flowLabels[c.flow_intensity] : null;
+
+                          return (
+                            <tr key={c.id} style={{ borderBottom: "1px solid var(--border)" }}>
+                              <td style={{ padding: "10px", fontWeight: 600 }}>{c.period_start}</td>
+                              <td style={{ padding: "10px", color: "var(--muted)" }}>{c.period_end ?? "—"}</td>
+                              <td style={{ padding: "10px" }}>
+                                {badge ? (
+                                  <span
+                                    style={{
+                                      background: badge.color,
+                                      color: "#fff",
+                                      padding: "3px 8px",
+                                      borderRadius: "999px",
+                                      fontSize: "0.78rem",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    {badge.label}
+                                  </span>
+                                ) : (
+                                  <span className="muted">—</span>
+                                )}
+                              </td>
+                              <td style={{ padding: "10px", color: "var(--muted)" }}>{c.notes || "—"}</td>
+                              <td style={{ padding: "10px", textAlign: "right" }}>
+                                <button
+                                  type="button"
+                                  onClick={() => void handleDeleteCycle(c.id)}
+                                  disabled={busy}
+                                  title="Delete cycle entry"
+                                  style={{
+                                    background: "rgba(239, 68, 68, 0.12)",
+                                    border: "1px solid rgba(239, 68, 68, 0.3)",
+                                    color: "#f87171",
+                                    borderRadius: "8px",
+                                    cursor: "pointer",
+                                    padding: "4px 8px",
+                                    fontSize: "0.8rem",
+                                  }}
+                                >
+                                  🗑️ Delete
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : cycA?.period_starts && cycA.period_starts.length > 0 ? (
                   <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                     {cycA.period_starts.map((pDate, idx) => (
                       <li
@@ -1122,20 +1514,6 @@ export default function App() {
                         </span>
                       </li>
                     ))}
-                  </ul>
-                ) : dash?.last_cycle ? (
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                    <li
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "8px 0",
-                        borderBottom: "1px solid var(--border)",
-                      }}
-                    >
-                      <span>Date: <strong>{dash.last_cycle.period_start}</strong></span>
-                      <span className="muted">Flow Intensity: {dash.last_cycle.flow_intensity ?? "—"}/5</span>
-                    </li>
                   </ul>
                 ) : (
                   <p className="muted">No cycles logged yet. Use the "Daily Log" tab to record your period start dates.</p>
@@ -1770,15 +2148,26 @@ export default function App() {
                       Generate a clean, clinical summary of your cycle patterns to share with your healthcare provider.
                     </p>
                   </div>
-                  <button
-                    className="primary"
-                    type="button"
-                    onClick={() => {
-                      window.print();
-                    }}
-                  >
-                    Print / Save as PDF
-                  </button>
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    <button
+                      className="ghost"
+                      type="button"
+                      disabled={exporting}
+                      onClick={() => void handleExportData()}
+                      title="Download complete clinical cycle logs, symptoms, and wearables in structured JSON"
+                    >
+                      {exporting ? "Exporting…" : "⬇ Export Data (JSON)"}
+                    </button>
+                    <button
+                      className="primary"
+                      type="button"
+                      onClick={() => {
+                        window.print();
+                      }}
+                    >
+                      Print / Save as PDF
+                    </button>
+                  </div>
                 </div>
                 <div className="metrics" style={{ marginTop: 14 }}>
                   <div className="metric">
@@ -2528,6 +2917,140 @@ export default function App() {
           </div>
         </div>
       ) : null}
+
+      {/* Mobile App & Phone QR Setup Modal */}
+      {mobileModalOpen && (
+        <div className="modal-backdrop" onClick={() => setMobileModalOpen(false)}>
+          <div className="modal-card" style={{ maxWidth: 480 }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h2>📱 Mobile App & Phone Setup</h2>
+                <p className="muted" style={{ margin: "4px 0 0", fontSize: "0.85rem" }}>
+                  Run this app on your Android or iPhone device
+                </p>
+              </div>
+              <button type="button" className="ghost" onClick={() => setMobileModalOpen(false)}>
+                ✕
+              </button>
+            </div>
+            <div className="mobile-qr-card">
+              <h4 style={{ margin: 0, color: "var(--accent)" }}>Scan with Your Phone Camera</h4>
+              <p className="muted" style={{ fontSize: "0.82rem", margin: "6px 0 12px" }}>
+                Ensure your phone is connected to the same Wi-Fi network as this laptop.
+              </p>
+              <div className="qr-code-box">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                    typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+                      ? window.location.origin
+                      : "http://192.168.1.2:8000"
+                  )}`}
+                  alt="Mobile Link QR Code"
+                  width={180}
+                  height={180}
+                  style={{ display: "block" }}
+                />
+              </div>
+              <div>
+                <span className="mobile-ip-badge">
+                  {typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+                    ? window.location.origin
+                    : "http://192.168.1.2:8000"}
+                </span>
+              </div>
+              <div style={{ textAlign: "left", marginTop: 14, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p><strong>1. Open on Phone:</strong> Scan the QR code or type the link above into Chrome / Safari.</p>
+                <p><strong>2. Install as App:</strong>
+                  <br />• <em>Android:</em> Tap the <strong>"Install App"</strong> popup or menu ➔ <strong>"Add to Home screen"</strong>.
+                  <br />• <em>iPhone:</em> Tap the Safari Share button ➔ <strong>"Add to Home Screen"</strong>.
+                </p>
+                <p><strong>3. Enjoy Native Feel:</strong> Launches full-screen from your phone's home screen with the app icon!</p>
+              </div>
+              <button
+                type="button"
+                className="primary"
+                style={{ width: "100%", marginTop: 16 }}
+                onClick={() => {
+                  const url = typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1"
+                    ? window.location.origin
+                    : "http://192.168.1.2:8000";
+                  void navigator.clipboard?.writeText(url);
+                  showToast(`Copied mobile link: ${url}`, "info");
+                }}
+              >
+                📋 Copy Mobile URL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PWA Floating Install Banner */}
+      {showInstallBanner && (
+        <div className="pwa-install-banner">
+          <div className="pwa-banner-content">
+            <img src="/icons/icon-192.png" alt="App Icon" className="pwa-banner-icon" />
+            <div className="pwa-banner-text">
+              <h4>Install CycleTracker App</h4>
+              <p>Add to your home screen for instant fullscreen access</p>
+            </div>
+          </div>
+          <div className="pwa-banner-actions">
+            <button type="button" className="pwa-install-btn" onClick={() => void handleInstallPWA()}>
+              Install
+            </button>
+            <button type="button" className="pwa-close-btn" onClick={() => setShowInstallBanner(false)} aria-label="Dismiss">
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Bottom Navigation Bar (Visible on phones) */}
+      {userId && (
+        <nav className="mobile-bottom-nav">
+          <button
+            type="button"
+            className={`mobile-nav-item ${tab === "dashboard" ? "active" : ""}`}
+            onClick={() => setTab("dashboard")}
+          >
+            <span className="mobile-nav-icon">🌸</span>
+            <span>Wheel</span>
+          </button>
+          <button
+            type="button"
+            className={`mobile-nav-item ${tab === "calendar" ? "active" : ""}`}
+            onClick={() => setTab("calendar")}
+          >
+            <span className="mobile-nav-icon">📅</span>
+            <span>Calendar</span>
+          </button>
+          <button
+            type="button"
+            className={`mobile-nav-item ${tab === "data" ? "active" : ""}`}
+            onClick={() => setTab("data")}
+          >
+            <span className="mobile-nav-icon">📝</span>
+            <span>Log</span>
+          </button>
+          <button
+            type="button"
+            className={`mobile-nav-item ${tab === "plans" ? "active" : ""}`}
+            onClick={() => setTab("plans")}
+          >
+            <span className="mobile-nav-icon">🥗</span>
+            <span>Plans</span>
+          </button>
+          <button
+            type="button"
+            className={`mobile-nav-item ${tab === "chat" ? "active" : ""}`}
+            onClick={() => setTab("chat")}
+          >
+            <span className="mobile-nav-icon">💬</span>
+            <span>Chat</span>
+          </button>
+        </nav>
+      )}
     </div>
   );
 }

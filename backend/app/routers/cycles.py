@@ -37,3 +37,23 @@ def recent_cycles(user_id: UUID = Query(...), limit: int = 6, db: Session = Depe
         .limit(min(limit, 24))
     )
     return list(db.execute(q).scalars().all())
+
+
+@router.get("/all", response_model=list[CycleOut])
+def all_cycles(user_id: UUID = Query(...), db: Session = Depends(get_db)) -> list[CycleEntry]:
+    q = (
+        select(CycleEntry)
+        .where(CycleEntry.user_id == user_id)
+        .order_by(CycleEntry.period_start.desc())
+    )
+    return list(db.execute(q).scalars().all())
+
+
+@router.delete("/{cycle_id}")
+def delete_cycle(cycle_id: UUID, user_id: UUID = Query(...), db: Session = Depends(get_db)) -> dict:
+    entry = db.get(CycleEntry, cycle_id)
+    if not entry or entry.user_id != user_id:
+        raise HTTPException(status_code=404, detail="Cycle entry not found")
+    db.delete(entry)
+    db.commit()
+    return {"status": "ok", "deleted_id": str(cycle_id)}

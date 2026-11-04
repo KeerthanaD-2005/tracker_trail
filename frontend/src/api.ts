@@ -1,5 +1,17 @@
-const API = "/api/v1";
 export const TOKEN_KEY = "mh_token";
+export const API_URL_KEY = "mh_api_url";
+
+export function getApiBase(): string {
+  if (typeof window !== "undefined") {
+    const custom = localStorage.getItem(API_URL_KEY);
+    if (custom) return `${custom.replace(/\/$/, "")}/api/v1`;
+    const origin = window.location.origin;
+    if (origin.startsWith("capacitor://") || (origin.startsWith("http://localhost") && !window.location.port)) {
+      return "http://192.168.1.2:8000/api/v1";
+    }
+  }
+  return "/api/v1";
+}
 
 function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem(TOKEN_KEY);
@@ -20,7 +32,7 @@ async function parseError(res: Response): Promise<string> {
 }
 
 export async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(body),
@@ -30,7 +42,7 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
 }
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     headers: getAuthHeaders(),
   });
   if (!res.ok) throw new Error(await parseError(res));
@@ -38,7 +50,7 @@ export async function apiGet<T>(path: string): Promise<T> {
 }
 
 export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "PATCH",
     headers: getAuthHeaders(),
     body: JSON.stringify(body),
@@ -48,7 +60,7 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
 }
 
 export async function apiPut<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(body),
@@ -58,7 +70,7 @@ export async function apiPut<T>(path: string, body: unknown): Promise<T> {
 }
 
 export async function apiDelete<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });
@@ -72,7 +84,7 @@ export async function apiUpload<T>(path: string, formData: FormData): Promise<T>
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
-  const res = await fetch(`${API}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "POST",
     headers,
     body: formData,
@@ -240,5 +252,56 @@ export type JournalEntryOut = {
   tag?: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type CycleItem = {
+  id: string;
+  user_id: string;
+  period_start: string;
+  period_end: string | null;
+  flow_intensity: number | null;
+  notes: string | null;
+  created_at?: string;
+};
+
+export type CycleForecastItem = {
+  cycle_number: number;
+  period_start: string;
+  period_end: string;
+  ovulation_date: string;
+  fertile_window_start: string;
+  fertile_window_end: string;
+  luteal_start: string;
+};
+
+export type CycleForecast = {
+  median_cycle_length: number;
+  irregularity_score: number;
+  regularity_status: string;
+  total_cycles_logged: number;
+  forecasts: CycleForecastItem[];
+};
+
+export type ExportData = {
+  user: User;
+  cycles: CycleItem[];
+  symptoms: Array<{
+    id: string;
+    log_date: string;
+    mood: number | null;
+    fatigue: number | null;
+    symptoms: Record<string, unknown> | null;
+  }>;
+  wearables: Array<{
+    id: string;
+    recorded_at: string;
+    hrv_ms: number | null;
+    resting_hr: number | null;
+    skin_temp_c: number | null;
+    spo2_pct: number | null;
+    steps: number | null;
+    workout_type: string | null;
+  }>;
+  exported_at: string;
 };
 

@@ -43,7 +43,7 @@ def login_user(body: UserLogin, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect email or password. If you don't have an account yet, click 'Create personal account' to sign up.",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

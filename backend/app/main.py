@@ -28,6 +28,11 @@ async def lifespan(app: FastAPI):
     Path(settings.artifacts_dir).mkdir(parents=True, exist_ok=True)
     Path(settings.storage_dir / "uploads").mkdir(parents=True, exist_ok=True)
     Base.metadata.create_all(bind=engine)
+    try:
+        from scripts.seed_demo import seed
+        seed()
+    except Exception as e:
+        print(f"Auto-seed: {e}")
     start_scheduler()
     yield
     shutdown_scheduler()
