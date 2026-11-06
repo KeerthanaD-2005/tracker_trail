@@ -63,7 +63,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
 
   const handleSwapRecipes = () => {
     setRecipeSetIndex((prev) => prev + 1);
-    showToast("✦ Swapped for fresh delicious recipes! ✨", "info");
+    showToast(" Swapped for fresh delicious recipes! ", "info");
   };
 
   const handleDiningOracle = (query: string) => {
@@ -108,7 +108,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
         phase: currentPhaseName.toLowerCase(),
       });
       setCustomRecipe(res);
-      showToast("✨ AI Chef crafted a delicious recipe for you!", "success");
+      showToast(" AI Chef crafted a delicious recipe for you!", "success");
     } catch {
       // Local fallback formulation
       const fallback: CustomRecipeOut = {
@@ -442,7 +442,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Added Iron & Hibiscus Tea to today's drink list!", "success")}
+                  onClick={() => showToast(" Added Iron & Hibiscus Tea to today's drink list!", "success")}
                   className="text-primary hover:text-on-primary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   Add to Routine <span className="material-symbols-outlined text-sm">add</span>
@@ -474,7 +474,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Added Pumpkin Seeds to your snack plan!", "success")}
+                  onClick={() => showToast(" Added Pumpkin Seeds to your snack plan!", "success")}
                   className="text-secondary hover:text-on-secondary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   Add to Snacks <span className="material-symbols-outlined text-sm">add</span>
@@ -506,7 +506,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 </span>
                 <button
                   type="button"
-                  onClick={() => showToast("✦ Added Watermelon Refresher to your bottle!", "success")}
+                  onClick={() => showToast(" Added Watermelon Refresher to your bottle!", "success")}
                   className="text-tertiary hover:text-on-tertiary-fixed font-label-md text-label-md font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   Add Drink <span className="material-symbols-outlined text-sm">add</span>
@@ -535,7 +535,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               <span className="material-symbols-outlined text-lg group-hover:rotate-180 transition-transform duration-500">
                 sync_saved_locally
               </span>
-              <span>Swap Recipes ✨</span>
+              <span>Swap Recipes </span>
             </button>
           </div>
 
@@ -626,7 +626,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
               </h3>
             </div>
             <span className="font-label-caps text-on-surface-variant text-xs">
-              AI Chef Ready ✨
+              AI Chef Ready 
             </span>
           </div>
 
@@ -674,7 +674,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                 <span className="material-symbols-outlined text-base">
                   {generatingAi ? "hourglass_top" : "magic_button"}
                 </span>
-                <span>{generatingAi ? "Cooking Up Recipe..." : "Create My Recipe ✨"}</span>
+                <span>{generatingAi ? "Cooking Up Recipe..." : "Create My Recipe "}</span>
               </button>
             </div>
           </form>
@@ -710,7 +710,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                   <ul className="space-y-1 text-sm text-on-surface-variant">
                     {customRecipe.ingredients.map((ing, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <span className="text-primary text-xs">✦</span>
+                        <span className="text-primary text-xs"></span>
                         <span>{ing}</span>
                       </li>
                     ))}
@@ -771,7 +771,7 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                   onClick={() => handleDiningOracle(diningInput)}
                   className="absolute right-1.5 top-1.5 bottom-1.5 px-4 rounded-full bg-primary text-on-primary font-label-caps text-label-caps hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center gap-1 cursor-pointer"
                 >
-                  <span>Ask ✨</span>
+                  <span>Ask </span>
                   <span className="material-symbols-outlined text-xs">arrow_forward</span>
                 </button>
               </div>
@@ -783,21 +783,21 @@ export const NourishKitchenView: React.FC<NourishKitchenViewProps> = ({
                   onClick={() => handleDiningOracle("Sushi Bar Order")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Sushi Bar Order 🍣
+                  Sushi Bar Order 
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDiningOracle("Salty / Crunchy Craving")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Salty / Crunchy Snack 🥨
+                  Salty / Crunchy Snack 
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDiningOracle("Sweet Tooth Remedy")}
                   className="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-caps text-label-caps hover:bg-primary-fixed hover:text-primary transition-colors cursor-pointer"
                 >
-                  Sweet Tooth Remedy 🍫
+                  Sweet Tooth Remedy 
                 </button>
               </div>
 

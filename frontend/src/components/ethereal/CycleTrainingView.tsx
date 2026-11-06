@@ -51,7 +51,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
         if (prev <= 1) {
           clearInterval(interval);
           setActiveTimerIndex(null);
-          showToast("⏰ Rest period complete! Ready for your next set.", "info");
+          showToast(" Rest period complete! Ready for your next set.", "info");
           return 0;
         }
         return prev - 1;
@@ -81,7 +81,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
         fatigue: 2,
         notes: `RPE: ${sessionRpe}. ${sessionNotes}`,
       });
-      showToast("✨ Post-workout RPE & neuromuscular vitals recorded!", "success");
+      showToast("Post-workout RPE & neuromuscular vitals recorded!", "success");
     } catch {
       showToast("RPE recorded in session state", "info");
     } finally {
@@ -118,7 +118,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   magic_button
                 </span>
                 <span>
-                  ⚡ Daily Workout Effort: {intensityScore} / 100 · High Energy!
+                  Daily Workout Effort: {intensityScore} / 100 · High Energy!
                 </span>
               </span>
             </div>
@@ -172,7 +172,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary-fixed/30 text-primary font-label-caps text-label-caps">
-                    ☾ Phase 01
+                     Phase 01
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
                     Days 1 - 5
@@ -240,7 +240,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed-variant font-label-caps text-label-caps">
-                    ✦ Phase 03
+                    Phase 03
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
                     Days 14 - 17
@@ -272,7 +272,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed/40 text-on-tertiary-fixed font-label-caps text-label-caps">
-                    ✧ Phase 04
+                     Phase 04
                   </span>
                   <span className="font-label-caps text-label-caps text-on-surface-variant">
                     Days 18 - 28
@@ -304,7 +304,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                       TODAY'S WORKOUT
                     </span>
                     <span className="text-on-surface-variant font-label-caps text-label-caps">
-                      High Energy Day ✨
+                      High Energy Day
                     </span>
                   </div>
                   <h2 className="font-headline-lg text-2xl sm:text-3xl text-on-surface font-bold">
@@ -332,7 +332,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                     type="button"
                     onClick={() => {
                       setSparkMode(true);
-                      showToast("✦ Boost +5kg active! Feeling strong.", "success");
+                      showToast("Boost +5kg active! Feeling strong.", "success");
                     }}
                     className={`px-4 py-1.5 rounded-full font-label-caps text-label-caps font-semibold flex items-center gap-1 transition-all cursor-pointer ${
                       sparkMode
@@ -556,7 +556,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   className="w-full sm:w-auto px-8 py-3 rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold shadow-lg hover:shadow-primary-container/40 hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span className="material-symbols-outlined">play_circle</span>
-                  <span>Start Guided Workout 🌸</span>
+                  <span>Start Guided Workout</span>
                 </button>
                 <button
                   type="button"
@@ -564,7 +564,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   className="w-full sm:w-auto px-6 py-3 rounded-full bg-surface-container-lowest text-on-surface hover:text-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer border border-surface-container-high"
                 >
                   <span className="material-symbols-outlined text-lg">edit_note</span>
-                  <span>Log How It Felt ✨</span>
+                  <span>Log How It Felt</span>
                 </button>
               </div>
             </div>
@@ -664,7 +664,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                 onClick={() => setTab("kitchen")}
                 className="w-full py-2 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md hover:bg-primary-fixed transition-colors font-semibold cursor-pointer shadow-sm"
               >
-                Go to Fuel & Eats 🥗
+                Go to Fuel & Eats
               </button>
             </div>
           </div>
@@ -683,7 +683,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   onClick={() => setGuidedModalOpen(false)}
                   className="text-on-surface-variant hover:text-on-surface"
                 >
-                  ✕
+                  X
                 </button>
               </div>
               <p className="font-body-md text-on-surface-variant">
@@ -732,7 +732,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   onClick={() => setRpeModalOpen(false)}
                   className="text-on-surface-variant hover:text-on-surface cursor-pointer"
                 >
-                  ✕
+                  X
                 </button>
               </div>
               <div className="space-y-1.5">
@@ -769,7 +769,7 @@ export const CycleTrainingView: React.FC<CycleTrainingViewProps> = ({
                   onClick={handleLogRpe}
                   className="flex-1 py-2.5 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all cursor-pointer"
                 >
-                  Save Workout Log ✨
+                  Save Workout Log
                 </button>
                 <button
                   type="button"

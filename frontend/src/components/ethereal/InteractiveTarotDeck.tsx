@@ -60,7 +60,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
       // Auto-reveal cards 1 and 2, leaving card 3 face down to flip
       setTimeout(() => {
         setFlippedCards({ 0: true, 1: true, 2: false });
-        showToast("✨ Shuffled all 22 cards! Tap Card 3 to reveal tonight's recovery advice.", "success");
+        showToast("Shuffled all 22 cards! Tap Card 3 to reveal tonight's recovery advice.", "success");
       }, 350);
     }, 650);
   };
@@ -75,7 +75,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
   const handleFanSelect = (card: FullTarotCard) => {
     setSelectedFanCard(card);
     if (onCardSelected) onCardSelected(card);
-    showToast(`✨ Drawn: ${card.name} (${card.subtitle})!`, "success");
+    showToast(`Drawn: ${card.name} (${card.subtitle})!`, "success");
   };
 
   // Filtered cards for the 22-card grid
@@ -102,7 +102,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             </span>
           </div>
           <h2 className="font-headline-lg text-2xl sm:text-3xl text-on-surface tracking-tight font-bold">
-            Daily Tarot & Mindset Draw ✨
+            Daily Tarot & Mindset Draw
           </h2>
         </div>
 
@@ -161,7 +161,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             >
               auto_awesome
             </span>
-            <span>{isShuffling ? "Shuffling..." : "Shuffle Deck ✨"}</span>
+            <span>{isShuffling ? "Shuffling..." : "Shuffle Deck"}</span>
           </button>
         </div>
       </div>
@@ -228,10 +228,10 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                       }}
                     >
                       {/* Corner Accents */}
-                      <span className="absolute top-2.5 left-3 text-xs text-primary/40 font-serif">✧</span>
-                      <span className="absolute top-2.5 right-3 text-xs text-primary/40 font-serif">✧</span>
-                      <span className="absolute bottom-2.5 left-3 text-xs text-primary/40 font-serif">✧</span>
-                      <span className="absolute bottom-2.5 right-3 text-xs text-primary/40 font-serif">✧</span>
+                      <span className="absolute top-2.5 left-3 text-xs text-primary/40 font-serif">+</span>
+                      <span className="absolute top-2.5 right-3 text-xs text-primary/40 font-serif">+</span>
+                      <span className="absolute bottom-2.5 left-3 text-xs text-primary/40 font-serif">+</span>
+                      <span className="absolute bottom-2.5 right-3 text-xs text-primary/40 font-serif">+</span>
 
                       <div className="space-y-3">
                         {/* Header: Numeral & Phase */}
@@ -307,8 +307,8 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                       }}
                     >
                       <div className="flex items-center justify-between w-full text-xs text-primary font-serif">
-                        <span>✦ AURA</span>
-                        <span>NYMPH ✦</span>
+                        <span>AURA</span>
+                        <span>NYMPH</span>
                       </div>
 
                       {/* Celestial Pattern */}
@@ -320,7 +320,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                           Tap to Reveal
                         </h4>
                         <p className="font-body-sm text-xs text-on-surface-variant max-w-[200px] leading-relaxed">
-                          Unveil today's body & energy reading ✨
+                          Unveil today's body & energy reading
                         </p>
                       </div>
 
@@ -405,7 +405,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
                     </div>
 
                     <span className="font-label-caps text-[9px] text-primary font-medium">
-                      {isSelected ? "✦ Active Draw" : "Tap to Draw"}
+                      {isSelected ? "Active Draw" : "Tap to Draw"}
                     </span>
                   </div>
                 );
@@ -560,7 +560,7 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
               onClick={() => setInspectCard(null)}
               className="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors cursor-pointer"
             >
-              ✕
+              X
             </button>
 
             {/* Modal Card Header */}
@@ -640,12 +640,12 @@ export const InteractiveTarotDeck: React.FC<InteractiveTarotDeckProps> = ({
             <button
               type="button"
               onClick={() => {
-                showToast(`✨ Chose ${inspectCard.name} for today's mindset focus!`, "success");
+                showToast(`Chose ${inspectCard.name} for today's mindset focus!`, "success");
                 setInspectCard(null);
               }}
               className="w-full py-3 rounded-full bg-primary text-on-primary font-label-lg text-sm font-semibold hover:bg-on-primary-container transition-all cursor-pointer shadow-md"
             >
-              Set as Today's Focus Card ✨
+              Set as Today's Focus Card
             </button>
           </div>
         </div>

@@ -104,7 +104,7 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '1.5rem' }}>🌸</span>
+          <span style={{ fontSize: '1.5rem' }}></span>
           <div>
             <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text)' }}>
               Next Period in ~{daysUntilPeriod} days
@@ -125,7 +125,7 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
             border: '1px solid var(--border)',
           }}
         >
-          ✨ {reminders.length} Active Reminders Set
+           {reminders.length} Active Reminders Set
         </div>
       </div>
 
@@ -234,8 +234,8 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
                 Selected Day & Reminders
               </span>
               <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)', marginTop: '2px' }}>
-                📅 {selectedDay} {selectedDay === todayStr ? '· Today' : ''}
-                {recentPeriods.includes(selectedDay) ? ' · 🩸 Period Logged' : ''}
+                 {selectedDay} {selectedDay === todayStr ? '· Today' : ''}
+                {recentPeriods.includes(selectedDay) ? ' ·  Period Logged' : ''}
               </div>
             </div>
 
@@ -255,7 +255,7 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
                   style={{ fontSize: '0.82rem', padding: '6px 14px', borderRadius: '999px' }}
                   onClick={() => onLogForDate(selectedDay)}
                 >
-                  ✎ Log Symptoms
+                   Log Symptoms
                 </button>
               )}
             </div>
@@ -294,11 +294,11 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
                   fontSize: '0.86rem',
                 }}
               >
-                <option value='wellness'>🌿 Wellness</option>
-                <option value='period'>🩸 Period Care</option>
-                <option value='workout'>💪 Workout</option>
-                <option value='nutrition'>🥗 Nutrition</option>
-                <option value='general'>📌 Note</option>
+                <option value='wellness'> Wellness</option>
+                <option value='period'> Period Care</option>
+                <option value='workout'> Workout</option>
+                <option value='nutrition'> Nutrition</option>
+                <option value='general'> Note</option>
               </select>
               <button
                 type='submit'
@@ -374,7 +374,7 @@ export const CycleCalendar: React.FC<CycleCalendarProps> = ({
                         fontSize: '0.85rem',
                       }}
                     >
-                      ✕
+                      
                     </button>
                   )}
                 </div>

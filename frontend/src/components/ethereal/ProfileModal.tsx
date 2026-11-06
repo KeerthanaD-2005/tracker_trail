@@ -52,7 +52,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         favorite_cuisines: favoriteCuisines,
       });
       onUserUpdated(updated);
-      showToast("✨ Profile & personal targets updated!", "success");
+      showToast("Profile & personal targets updated!", "success");
       onClose();
     } catch {
       showToast("Profile saved in active session state", "info");
@@ -84,7 +84,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant cursor-pointer"
           >
-            ✕
+            X
           </button>
         </div>
 
@@ -232,7 +232,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               disabled={saving}
               className="flex-1 py-3 rounded-full bg-primary text-on-primary font-label-lg font-semibold hover:bg-on-primary-container transition-all cursor-pointer shadow-sm"
             >
-              {saving ? "Saving Profile..." : "Save Profile 🌸"}
+              {saving ? "Saving Profile..." : "Save Profile "}
             </button>
             <button
               type="button"

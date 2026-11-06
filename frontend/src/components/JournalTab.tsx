@@ -353,7 +353,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
               marginBottom: 14,
             }}
           >
-            🛡
+            
           </div>
           <h2 style={{ fontSize: "1.6rem", margin: "0 0 8px" }}>Private Journal Vault</h2>
           <p className="muted" style={{ maxWidth: 540, margin: "0 auto", lineHeight: 1.5, fontSize: "0.95rem" }}>
@@ -478,7 +478,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
               fontWeight: 700,
             }}
           >
-            🛡
+            
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -950,7 +950,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                 padding: 0,
               }}
             >
-              ✕
+              
             </button>
             <img
               src={lightboxImage}
@@ -999,7 +999,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: "1.3rem" }}>🛡</span>
+                <span style={{ fontSize: "1.3rem" }}></span>
                 <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Physical Database Storage Proof</h3>
               </div>
               <button
@@ -1008,7 +1008,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({
                 onClick={() => setProofEntry(null)}
                 style={{ fontSize: "1.1rem" }}
               >
-                ✕
+                
               </button>
             </div>
 

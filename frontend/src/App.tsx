@@ -108,7 +108,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("✨ Welcome back to Aura Nymph Athlete Sanctuary!", "success");
+        showToast("Welcome back to Aura Nymph Athlete Sanctuary!", "success");
       } else {
         const res = await apiPost<{ access_token: string; user_id: string }>("/auth/register", {
           email,
@@ -118,7 +118,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("✨ Account initialized! Welcome to Aura Nymph.", "success");
+        showToast("Account initialized! Welcome to Aura Nymph.", "success");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -128,7 +128,7 @@ export default function App() {
         const fallbackId = "demo-local-athlete-01";
         localStorage.setItem(USER_KEY, fallbackId);
         setUserId(fallbackId);
-        showToast("✨ Demo offline mode active. Welcome to Aura Nymph!", "info");
+        showToast("Demo offline mode active. Welcome to Aura Nymph!", "info");
       }
     } finally {
       setAuthBusy(false);
@@ -165,7 +165,7 @@ export default function App() {
         period_start: periodStartInput,
         flow_intensity: Number(periodFlowInput),
       });
-      showToast("✨ Period start date logged! Phase prediction updated.", "success");
+      showToast("Period start date logged! Phase prediction updated.", "success");
       refreshDashboard();
     } catch {
       showToast("Period date saved locally.", "info");
@@ -231,7 +231,7 @@ export default function App() {
         <div className="bg-surface-container-lowest/90 backdrop-blur-2xl rounded-3xl p-8 sm:p-12 shadow-[0_20px_50px_rgba(148,69,91,0.08)] max-w-md w-full border border-surface-container-high/60 relative z-10 space-y-6">
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-primary-container text-on-primary flex items-center justify-center font-bold text-xl mx-auto shadow-md">
-              ✧
+              <span className="material-symbols-outlined text-base">spa</span>
             </div>
             <h1 className="font-display-hero text-2xl sm:text-3xl font-bold tracking-tight text-primary">
               AURA // NYMPH
@@ -282,8 +282,8 @@ export default function App() {
               {authBusy
                 ? "Connecting Sanctuary..."
                 : authMode === "login"
-                ? "Enter Athlete Sanctuary 🌸"
-                : "Create Sanctuary Account ✧"}
+                ? "Enter Athlete Sanctuary"
+                : "Create Sanctuary Account"}
             </button>
 
             <div className="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
@@ -299,7 +299,7 @@ export default function App() {
                 onClick={() => {
                   localStorage.setItem(USER_KEY, "demo-athlete-elena");
                   setUserId("demo-athlete-elena");
-                  showToast("✨ Entered Sanctuary via Fast Demo Access!", "success");
+                  showToast("Entered Sanctuary via Fast Demo Access!", "success");
                 }}
                 className="text-primary font-semibold hover:underline cursor-pointer"
               >
@@ -488,9 +488,9 @@ export default function App() {
           <button
             type="button"
             onClick={() => setToast(null)}
-            className="text-on-surface-variant hover:text-on-surface text-xs ml-2"
+            className="text-on-surface-variant hover:text-on-surface text-xs ml-2 cursor-pointer"
           >
-            ✕
+            <span className="material-symbols-outlined text-xs">close</span>
           </button>
         </div>
       )}

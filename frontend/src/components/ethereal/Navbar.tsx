@@ -43,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setTab("dashboard")}
         >
           <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center text-on-primary shadow-sm font-semibold text-lg">
-            ✧
+            <span className="material-symbols-outlined text-base">spa</span>
           </div>
           <div className="flex flex-col">
             <span className="font-headline-sm text-headline-sm tracking-tight text-primary font-semibold">
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Home & Tarot ✨
+            Home & Tarot
           </button>
           <button
             type="button"
@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Move & Train ⚡
+            Move & Train
           </button>
           <button
             type="button"
@@ -88,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Fuel & Eats 🥗
+            Fuel & Eats
           </button>
           <button
             type="button"
@@ -99,31 +99,31 @@ export const Navbar: React.FC<NavbarProps> = ({
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
-            Body Stats 📈
+            Body Stats
           </button>
           <button
             type="button"
             onClick={() => setTab("journal")}
-            className={`px-4 py-1.5 font-label-lg text-label-lg transition-all rounded-full flex items-center gap-1 ${
+            className={`px-4 py-1.5 font-label-lg text-label-lg transition-all rounded-full flex items-center gap-1.5 ${
               currentTab === "journal"
                 ? "bg-surface-container-low text-primary font-semibold shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]"
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
             <span>My Journal</span>
-            <span className="text-xs">🔒</span>
+            <span className="material-symbols-outlined text-xs">lock</span>
           </button>
           <button
             type="button"
             onClick={() => setTab("calendar")}
-            className={`px-4 py-1.5 font-label-lg text-label-lg transition-all rounded-full flex items-center gap-1 ${
+            className={`px-4 py-1.5 font-label-lg text-label-lg transition-all rounded-full flex items-center gap-1.5 ${
               currentTab === "calendar"
                 ? "bg-surface-container-low text-primary font-semibold shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]"
                 : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high"
             }`}
           >
             <span>Calendar</span>
-            <span className="text-xs">📅</span>
+            <span className="material-symbols-outlined text-xs">calendar_month</span>
           </button>
         </nav>
 
@@ -202,7 +202,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-3 py-1.5 rounded-lg text-sm hover:bg-surface-container flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-sm text-secondary">lock</span>
-                    <span>Private Journal 🔒</span>
+                    <span>Private Journal</span>
                   </button>
                   <button
                     type="button"
@@ -213,7 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-3 py-1.5 rounded-lg text-sm hover:bg-surface-container flex items-center gap-2"
                   >
                     <span className="material-symbols-outlined text-sm text-tertiary">event</span>
-                    <span>Cycle Calendar 📅</span>
+                    <span>Cycle Calendar</span>
                   </button>
                 </div>
 
@@ -245,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "dashboard" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Tarot ✨
+          Tarot
         </button>
         <button
           type="button"
@@ -254,7 +254,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "training" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Train ⚡
+          Train
         </button>
         <button
           type="button"
@@ -263,7 +263,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "kitchen" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Fuel 🥗
+          Fuel
         </button>
         <button
           type="button"
@@ -272,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "biometrics" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Stats 📈
+          Stats
         </button>
         <button
           type="button"
@@ -281,7 +281,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "journal" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Journal 🔒
+          Journal
         </button>
         <button
           type="button"
@@ -290,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             currentTab === "calendar" ? "bg-primary text-on-primary" : "text-on-surface-variant"
           }`}
         >
-          Calendar 📅
+          Calendar
         </button>
       </div>
     </header>
