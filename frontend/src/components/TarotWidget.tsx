@@ -205,7 +205,7 @@ export const TarotWidget: React.FC<Props> = ({ isOpen, onClose }) => {
               justifyContent: 'center',
             }}
           >
-            ✕
+            
           </button>
         </div>
 
@@ -276,7 +276,7 @@ export const TarotWidget: React.FC<Props> = ({ isOpen, onClose }) => {
                         fontSize: '1.4rem',
                       }}
                     >
-                      ✦
+                      
                     </div>
                   </div>
                 );
@@ -333,7 +333,7 @@ export const TarotWidget: React.FC<Props> = ({ isOpen, onClose }) => {
               </h4>
 
               <div style={{ fontSize: '0.85rem', color: selectedCard.color, fontWeight: 600, marginBottom: '0.75rem' }}>
-                ✦ {selectedCard.archetype} ✦
+                 {selectedCard.archetype} 
               </div>
 
               <p style={{ fontStyle: 'italic', fontSize: '0.86rem', color: '#f1f5f9', margin: '0.5rem 0 1rem', lineHeight: '1.4' }}>

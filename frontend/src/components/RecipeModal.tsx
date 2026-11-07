@@ -102,7 +102,7 @@ export const RecipeModal: React.FC<RecipeModalProps> = ({ recipe, onClose }) => 
               flexShrink: 0,
             }}
           >
-            ✕
+            
           </button>
         </div>
 

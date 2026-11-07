@@ -82,7 +82,7 @@ export const TaskChecklist: React.FC<Props> = ({ onTaskToggle }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
         <div>
           <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: 'var(--text)' }}>
-            Daily Body & Mind Habits ✨
+            Daily Body & Mind Habits 
           </h4>
           <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--muted)' }}>
             {completedCount} of {tasks.length} habits completed today ({progressPct}%)
@@ -222,7 +222,7 @@ export const TaskChecklist: React.FC<Props> = ({ onTaskToggle }) => {
                 borderRadius: '6px',
               }}
             >
-              ✕
+              
             </button>
           </div>
         ))}

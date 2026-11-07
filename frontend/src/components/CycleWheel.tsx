@@ -95,7 +95,7 @@ export const CycleWheel: React.FC<CycleWheelProps> = ({
     <div className="cycle-wheel-container">
       <div className="wheel-header">
         <span className="wheel-badge" style={{ backgroundColor: `${phaseBadgeColor}25`, color: phaseBadgeColor }}>
-          ✨ {phaseTitle}
+           {phaseTitle}
         </span>
         <span className="wheel-cycle-summary">Cycle Length: ~{cycleLength} Days</span>
       </div>
@@ -186,7 +186,7 @@ export const CycleWheel: React.FC<CycleWheelProps> = ({
 
         {/* Center content inside wheel */}
         <div className="wheel-center-content">
-          <div className="lotus-icon">🪷</div>
+          <div className="lotus-icon"></div>
           <h2 className="wheel-phase-title">{phaseTitle}</h2>
           <p className="wheel-insight-text">{athleticInsight}</p>
         </div>
@@ -206,7 +206,7 @@ export const CycleWheel: React.FC<CycleWheelProps> = ({
           className="clue-pill-button symptoms"
           onClick={onLogSymptomsClick}
         >
-          <span>✎</span> Log Symptoms
+          <span></span> Log Symptoms
         </button>
       </div>
     </div>
