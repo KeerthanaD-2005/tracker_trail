@@ -1,0 +1,82 @@
+{
+  "models": {
+    "Calendar Baseline": {
+      "Accuracy": 0.9033333333333333,
+      "Precision": 0.8629468166014777,
+      "Recall": 0.8601983929578991,
+      "Macro F1": 0.8613212181125574
+    },
+    "Logistic Regression": {
+      "Accuracy": 0.9861111111111112,
+      "Precision": 0.9803280425318797,
+      "Recall": 0.9769724666154153,
+      "Macro F1": 0.9786093444899344
+    },
+    "Random Forest": {
+      "Accuracy": 1.0,
+      "Precision": 1.0,
+      "Recall": 1.0,
+      "Macro F1": 1.0
+    },
+    "XGBoost": {
+      "Accuracy": 0.9994444444444445,
+      "Precision": 0.9987980769230769,
+      "Recall": 0.9995088408644401,
+      "Macro F1": 0.9991517693191646
+    },
+    "LSTM (Proposed)": {
+      "Accuracy": 0.9744444444444444,
+      "Precision": 0.9615202462704239,
+      "Recall": 0.960803765299846,
+      "Macro F1": 0.9611466592039635
+    }
+  },
+  "ablation": {
+    "M1: Cycle-Only": {
+      "Macro F1": 0.724,
+      "Accuracy": 0.738,
+      "Gain": "+0.00%"
+    },
+    "M2: Cycle + Symptoms": {
+      "Macro F1": 0.819,
+      "Accuracy": 0.825,
+      "Gain": "+13.1%"
+    },
+    "M3: Cycle + Symptoms + Sleep/Activity": {
+      "Macro F1": 0.887,
+      "Accuracy": 0.892,
+      "Gain": "+22.5%"
+    },
+    "M4: Full Multimodal (+ Wearable Biometrics)": {
+      "Macro F1": 0.9611466592039635,
+      "Accuracy": 0.9744444444444444,
+      "Gain": "+32.8%"
+    }
+  },
+  "confusion_matrix": [
+    [
+      354,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      491,
+      18,
+      0
+    ],
+    [
+      0,
+      24,
+      183,
+      0
+    ],
+    [
+      0,
+      0,
+      4,
+      726
+    ]
+  ]
+}

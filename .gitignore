@@ -15,3 +15,9 @@ backend/menstrual_health.db
 *.db
 backend/storage/uploads/
 
+# Android build and cache
+android-kotlin/.gradle/
+android-kotlin/build/
+android-kotlin/app/build/
+*.apk
+*.aab

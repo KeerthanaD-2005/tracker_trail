@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 500" width="100%" height="100%" style="background:#ffffff; font-family:'Helvetica Neue', Arial, sans-serif;">
+  <text x="325" y="32" font-size="17" font-weight="bold" text-anchor="middle" fill="#0f172a">Figure 5: Normalized Confusion Matrix for LSTM Phase Classification</text>
+  <text x="325" y="52" font-size="12" fill="#64748b" text-anchor="middle">Rows: True Ground-Truth Phase · Columns: Model Predicted Phase</text>
+  <text x="222.5" y="78" font-size="12" font-weight="600" text-anchor="middle" fill="#334155">Menstrual</text>
+  <text x="307.5" y="78" font-size="12" font-weight="600" text-anchor="middle" fill="#334155">Follicular</text>
+  <text x="392.5" y="78" font-size="12" font-weight="600" text-anchor="middle" fill="#334155">Ovulatory</text>
+  <text x="477.5" y="78" font-size="12" font-weight="600" text-anchor="middle" fill="#334155">Luteal</text>
+  <text x="166" y="136.5" font-size="12" font-weight="600" text-anchor="end" fill="#334155">Menstrual</text>
+  <rect x="180" y="90" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 1.00)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="220.5" y="124" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">100.0%</text>
+  <text x="220.5" y="144" font-size="11" text-anchor="middle" fill="#ffffff" opacity="0.85">(n=354)</text>
+  <rect x="265" y="90" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="305.5" y="124" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="305.5" y="144" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="350" y="90" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="390.5" y="124" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="390.5" y="144" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="435" y="90" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="475.5" y="124" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="475.5" y="144" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <text x="166" y="221.5" font-size="12" font-weight="600" text-anchor="end" fill="#334155">Follicular</text>
+  <rect x="180" y="175" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="220.5" y="209" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="220.5" y="229" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="265" y="175" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.96)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="305.5" y="209" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">96.5%</text>
+  <text x="305.5" y="229" font-size="11" text-anchor="middle" fill="#ffffff" opacity="0.85">(n=491)</text>
+  <rect x="350" y="175" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="390.5" y="209" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">3.5%</text>
+  <text x="390.5" y="229" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=18)</text>
+  <rect x="435" y="175" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="475.5" y="209" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="475.5" y="229" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <text x="166" y="306.5" font-size="12" font-weight="600" text-anchor="end" fill="#334155">Ovulatory</text>
+  <rect x="180" y="260" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="220.5" y="294" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="220.5" y="314" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="265" y="260" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.12)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="305.5" y="294" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">11.6%</text>
+  <text x="305.5" y="314" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=24)</text>
+  <rect x="350" y="260" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.88)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="390.5" y="294" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">88.4%</text>
+  <text x="390.5" y="314" font-size="11" text-anchor="middle" fill="#ffffff" opacity="0.85">(n=183)</text>
+  <rect x="435" y="260" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="475.5" y="294" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="475.5" y="314" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <text x="166" y="391.5" font-size="12" font-weight="600" text-anchor="end" fill="#334155">Luteal</text>
+  <rect x="180" y="345" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="220.5" y="379" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="220.5" y="399" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="265" y="345" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="305.5" y="379" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.0%</text>
+  <text x="305.5" y="399" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=0)</text>
+  <rect x="350" y="345" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.08)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="390.5" y="379" font-size="14" font-weight="bold" text-anchor="middle" fill="#1e1b4b">0.5%</text>
+  <text x="390.5" y="399" font-size="11" text-anchor="middle" fill="#1e1b4b" opacity="0.85">(n=4)</text>
+  <rect x="435" y="345" width="81" height="81" rx="8" fill="rgba(109, 40, 217, 0.99)" stroke="#cbd5e1" stroke-width="1" />
+  <text x="475.5" y="379" font-size="14" font-weight="bold" text-anchor="middle" fill="#ffffff">99.5%</text>
+  <text x="475.5" y="399" font-size="11" text-anchor="middle" fill="#ffffff" opacity="0.85">(n=726)</text>
+
+  <text x="560" y="100" font-size="10" fill="#64748b">100%</text>
+  <defs>
+    <linearGradient id="cmGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6d28d9" />
+      <stop offset="100%" stop-color="#f5f3ff" />
+    </linearGradient>
+  </defs>
+  <rect x="560" y="110" width="16" height="240" rx="4" fill="url(#cmGrad)" stroke="#cbd5e1" />
+  <text x="560" y="365" font-size="10" fill="#64748b">0%</text>
+  <text x="325" y="470" font-size="12" font-style="italic" fill="#64748b" text-anchor="middle">Overall Test Classification Accuracy: 97.2% · Diagonal elements indicate correct classifications.</text>
+</svg>

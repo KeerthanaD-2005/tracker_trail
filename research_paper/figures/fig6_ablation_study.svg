@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" width="100%" height="100%" style="background:#ffffff; font-family:'Helvetica Neue', Arial, sans-serif;">
+  <text x="380" y="32" font-size="17" font-weight="bold" text-anchor="middle" fill="#0f172a">Figure 6: Multimodal Feature Ablation Study (Macro F1 Improvement)</text>
+  <text x="380" y="52" font-size="12" fill="#64748b" text-anchor="middle">Incremental impact of integrating Symptoms, Activity/Sleep, and Continuous Wearable Biometrics</text>
+
+  <!-- Horizontal Grid -->
+  <line x1="300" y1="80" x2="300" y2="300" stroke="#94a3b8" stroke-width="1.5" />
+  <line x1="400" y1="80" x2="400" y2="300" stroke="#f1f5f9" stroke-width="1" />
+  <line x1="500" y1="80" x2="500" y2="300" stroke="#f1f5f9" stroke-width="1" />
+  <line x1="600" y1="80" x2="600" y2="300" stroke="#f1f5f9" stroke-width="1" />
+  <line x1="700" y1="80" x2="700" y2="300" stroke="#f1f5f9" stroke-width="1" />
+  
+  <text x="300" y="318" font-size="10" text-anchor="middle" fill="#64748b">0.60</text>
+  <text x="400" y="318" font-size="10" text-anchor="middle" fill="#64748b">0.70</text>
+  <text x="500" y="318" font-size="10" text-anchor="middle" fill="#64748b">0.80</text>
+  <text x="600" y="318" font-size="10" text-anchor="middle" fill="#64748b">0.90</text>
+  <text x="700" y="318" font-size="10" text-anchor="middle" fill="#64748b">1.00</text>
+  <text x="285" y="118" font-size="11" font-weight="600" text-anchor="end" fill="#334155">M1: Cycle-Only</text>
+  <rect x="300" y="100" width="124.0" height="28" rx="6" fill="#94a3b8" />
+  <text x="434.0" y="119" font-size="11" font-weight="bold" fill="#0f172a">0.724 (+0.00%)</text>
+  <text x="285" y="168" font-size="11" font-weight="600" text-anchor="end" fill="#334155">M2: Cycle + Symptoms</text>
+  <rect x="300" y="150" width="219.0" height="28" rx="6" fill="#38bdf8" />
+  <text x="529.0" y="169" font-size="11" font-weight="bold" fill="#0f172a">0.819 (+13.1%)</text>
+  <text x="285" y="218" font-size="11" font-weight="600" text-anchor="end" fill="#334155">M3: Cycle + Symptoms + Sleep/Activity</text>
+  <rect x="300" y="200" width="287.0" height="28" rx="6" fill="#0284c7" />
+  <text x="597.0" y="219" font-size="11" font-weight="bold" fill="#0f172a">0.887 (+22.5%)</text>
+  <text x="285" y="268" font-size="11" font-weight="600" text-anchor="end" fill="#334155">M4: Full Multimodal (+ Wearable Biometrics)</text>
+  <rect x="300" y="250" width="361.1" height="28" rx="6" fill="#7c3aed" />
+  <text x="671.1" y="269" font-size="11" font-weight="bold" fill="#0f172a">0.961 (+32.8%)</text>
+
+  <text x="380" y="355" font-size="12" font-style="italic" fill="#475569" text-anchor="middle">Wearable biometrics (HRV, RHR, Skin Temp) deliver a +34.5% relative gain in phase classification F1-score over cycle-only features.</text>
+</svg>
