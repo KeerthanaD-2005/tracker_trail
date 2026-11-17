@@ -1,15 +1,25 @@
 @echo off
-title Menstrual and Athletic Health Tracker - Server
-echo ========================================================
-echo   Starting Menstrual and Athletic Health Tracker
-echo ========================================================
-echo.
-
+title SELENE Server
 cd /d "%~dp0backend"
 
-:: Run the smart auto-port runner with browser launcher
-".venv\Scripts\python.exe" run.py
-
+echo ======================================================================
+echo    SELENE : Athlete Sanctuary & Cycle Intelligence
+echo ======================================================================
 echo.
-echo Server stopped.
+echo Checking port 8000...
+powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }"
+
+echo Starting application server...
+echo.
+echo ======================================================================
+echo   LIVE SERVER ACTIVE : http://localhost:8000
+echo   API DOCS (SWAGGER): http://localhost:8000/docs
+echo.
+echo   Open http://localhost:8000 in your browser.
+echo   Press Ctrl+C to stop the server.
+echo ======================================================================
+echo.
+
+".venv\Scripts\python.exe" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+
 pause

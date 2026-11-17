@@ -108,7 +108,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("Welcome back to Aura Nymph Athlete Sanctuary!", "success");
+        showToast("Welcome back to Selene Sanctuary!", "success");
       } else {
         const res = await apiPost<{ access_token: string; user_id: string }>("/auth/register", {
           email,
@@ -118,7 +118,7 @@ export default function App() {
         localStorage.setItem(TOKEN_KEY, res.access_token);
         localStorage.setItem(USER_KEY, res.user_id);
         setUserId(res.user_id);
-        showToast("Account initialized! Welcome to Aura Nymph.", "success");
+        showToast("Account initialized! Welcome to Selene.", "success");
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -128,7 +128,7 @@ export default function App() {
         const fallbackId = "demo-local-athlete-01";
         localStorage.setItem(USER_KEY, fallbackId);
         setUserId(fallbackId);
-        showToast("Demo offline mode active. Welcome to Aura Nymph!", "info");
+        showToast("Demo offline mode active. Welcome to Selene!", "info");
       }
     } finally {
       setAuthBusy(false);
@@ -234,10 +234,10 @@ export default function App() {
               <span className="material-symbols-outlined text-base">spa</span>
             </div>
             <h1 className="font-display-hero text-2xl sm:text-3xl font-bold tracking-tight text-primary">
-              AURA // NYMPH
+              SELENE
             </h1>
             <p className="font-label-caps text-on-surface-variant uppercase tracking-wider text-xs">
-              Phase-Intelligent Athlete Sanctuary
+              Your Daily Cycle & Body Guide
             </p>
           </div>
 
@@ -280,10 +280,10 @@ export default function App() {
               className="w-full py-3.5 rounded-full bg-primary text-on-primary font-headline-sm text-sm font-semibold hover:bg-on-primary-container transition-all shadow-md active:scale-98 cursor-pointer mt-2"
             >
               {authBusy
-                ? "Connecting Sanctuary..."
+                ? "Signing in..."
                 : authMode === "login"
-                ? "Enter Athlete Sanctuary"
-                : "Create Sanctuary Account"}
+                ? "Sign In"
+                : "Create Account"}
             </button>
 
             <div className="pt-2 flex items-center justify-between text-xs text-on-surface-variant">
@@ -292,18 +292,18 @@ export default function App() {
                 onClick={() => setAuthMode((m) => (m === "login" ? "register" : "login"))}
                 className="hover:text-primary transition-colors cursor-pointer"
               >
-                {authMode === "login" ? "Create new account" : "Have an account? Sign in"}
+                {authMode === "login" ? "Create an account" : "Have an account? Sign in"}
               </button>
               <button
                 type="button"
                 onClick={() => {
                   localStorage.setItem(USER_KEY, "demo-athlete-elena");
                   setUserId("demo-athlete-elena");
-                  showToast("Entered Sanctuary via Fast Demo Access!", "success");
+                  showToast("Welcome to Selene Demo!", "success");
                 }}
                 className="text-primary font-semibold hover:underline cursor-pointer"
               >
-                Instant Demo Access →
+                Explore Demo Preview →
               </button>
             </div>
           </form>
@@ -375,16 +375,14 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-caps text-label-caps">
-                    <span className="material-symbols-outlined text-sm">lock</span>
-                    <span>Zero-Knowledge Client-Side AES-GCM-256 Vault</span>
+                    <span className="material-symbols-outlined text-sm">edit_note</span>
+                    <span>Daily Journal & Notes</span>
                   </div>
                   <h1 className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight mt-1">
-                    Private Somatic Journal & Photo Vault
+                    Your Journal & Reflections
                   </h1>
                   <p className="font-body-md text-on-surface-variant max-w-2xl mt-1">
-                    Your notes, photos, and reflections are encrypted in your browser with PBKDF2
-                    (100,000 iterations) + AES-GCM-256 before transmitting. The database server never sees
-                    unencrypted text or photos.
+                    A quiet space to write notes on your cycle, energy, and thoughts.
                   </p>
                 </div>
               </div>

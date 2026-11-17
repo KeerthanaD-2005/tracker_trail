@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start SELENE App",
+      "type": "shell",
+      "command": "cmd.exe /c \"${workspaceFolder}\\run_app.bat\"",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
