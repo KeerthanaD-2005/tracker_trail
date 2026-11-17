@@ -3,7 +3,7 @@ title SELENE Server
 cd /d "%~dp0backend"
 
 echo ======================================================================
-echo    SELENE : Athlete Sanctuary & Cycle Intelligence
+echo    SELENE : Athlete Sanctuary ^& Cycle Intelligence
 echo ======================================================================
 echo.
 echo Checking port 8000...
