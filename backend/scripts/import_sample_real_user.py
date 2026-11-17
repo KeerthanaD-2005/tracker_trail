@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT))
 from app.database import SessionLocal  # noqa: E402
 from app.models import CycleEntry, User, UserAppState  # noqa: E402
 
-DATA_PATH = ROOT / "data" / "real" / "FedCycleData.csv"
+DATA_PATH = ROOT.parent / "training_data" / "real" / "real_human_cycles_fedcycle.csv"
 
 
 def import_real_user(client_id: str = "nfp8122") -> None:

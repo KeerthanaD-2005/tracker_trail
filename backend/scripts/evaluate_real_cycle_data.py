@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-DATA_PATH = ROOT / "data" / "real" / "FedCycleData.csv"
+DATA_PATH = ROOT.parent / "training_data" / "real" / "real_human_cycles_fedcycle.csv"
 ARTIFACTS_DIR = ROOT / "artifacts"
 ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 

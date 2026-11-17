@@ -1,4 +1,4 @@
-"""Rule-augmented dietary knowledge base (JSON) merged with phase macros and clinical governance."""
+"""Rule-augmented dietary knowledge base (JSON) merged with phase macros."""
 
 from __future__ import annotations
 
@@ -18,16 +18,12 @@ def _load_kb() -> dict[str, Any]:
 
 def build_dietary_bundle(phase: str, macro_rules: dict[str, Any]) -> dict[str, Any]:
     kb = _load_kb()
-    block = kb.get(phase) or kb.get("unknown", {})
-    governance = kb.get("_clinical_governance", {})
-
+    block = kb.get(phase) or kb["unknown"]
     out: dict[str, Any] = dict(macro_rules)
     out["phase"] = phase
     out["hydration_liters"] = float(block.get("hydration_liters", 2.5))
     out["micronutrients"] = list(block.get("micronutrients", []))
     out["meal_templates"] = list(block.get("meal_templates", []))
     out["snacks"] = list(block.get("snacks", []))
-    out["clinical_rationale"] = str(block.get("clinical_rationale", ""))
-    out["clinical_governance"] = governance
     out["kb_source"] = "diet_phases.json"
     return out

@@ -1,14 +1,7 @@
 {
-  "_clinical_governance": {
-    "framework": "ACSM & ISSN Sports Nutrition Position Stand for Female Athletes",
-    "energy_availability_standard": "IOC RED-S Consensus Statement (>30 kcal/kg FFM/day)",
-    "reviewed_by": "Sports Physiologist and Clinical Nutritionist Consultation",
-    "disclaimer": "Informational athletic conditioning and dietary decision-support heuristic for healthy eumenorrheic athletes. Not intended as medical nutrition therapy for clinical endocrine or eating disorders."
-  },
   "menstrual": {
     "hydration_liters": 2.5,
     "micronutrients": ["iron", "vitamin_b12", "vitamin_c"],
-    "clinical_rationale": "Compensate for acute menstrual hemoglobin and iron depletion (1.5-2.0 mg elemental iron/day) to maintain aerobic capacity (VO2max).",
     "meal_templates": [
       { "meal": "breakfast", "focus": "Iron + gentle fiber", "examples": ["Fortified oats with berries", "Eggs with spinach"] },
       { "meal": "lunch", "focus": "Lean protein + complex carbs", "examples": ["Lentil soup", "Chicken + quinoa bowl"] },
@@ -19,7 +12,6 @@
   "follicular": {
     "hydration_liters": 2.6,
     "micronutrients": ["zinc", "folate", "omega_3"],
-    "clinical_rationale": "High insulin sensitivity and enhanced glycogen storage under 17beta-estradiol; supports progressive resistance overload and high-intensity output.",
     "meal_templates": [
       { "meal": "breakfast", "focus": "Higher carb tolerance", "examples": ["Greek yogurt + granola", "Wholegrain toast + avocado"] },
       { "meal": "lunch", "focus": "Balanced plate for progressive training", "examples": ["Turkey wrap + salad", "Chickpea bowl"] },
@@ -30,7 +22,6 @@
   "ovulatory": {
     "hydration_liters": 2.7,
     "micronutrients": ["magnesium", "choline"],
-    "clinical_rationale": "Peak neuromuscular force output and central drive; replenish acute exertion with sustained carbohydrates and 3.0g leucine-rich protein.",
     "meal_templates": [
       { "meal": "breakfast", "focus": "Sustained energy", "examples": ["Omelette + oats", "Chia pudding"] },
       { "meal": "lunch", "focus": "Moderate GI carbs", "examples": ["Sushi bowl", "Pasta + vegetables"] },
@@ -41,7 +32,6 @@
   "luteal": {
     "hydration_liters": 2.8,
     "micronutrients": ["magnesium", "vitamin_b6", "tryptophan_sources"],
-    "clinical_rationale": "Progesterone-driven thermogenesis elevates resting metabolic rate (+100-300 kcal/day). Extra dietary fiber (32g/day) binds biliary glucuronidated estrogens in the gut to prevent reabsorption.",
     "meal_templates": [
       { "meal": "breakfast", "focus": "Stable glucose", "examples": ["Protein oats", "Cottage cheese + fruit"] },
       { "meal": "lunch", "focus": "Comfort + fiber", "examples": ["Brown rice bowl", "Soup + wholegrain bread"] },
@@ -52,7 +42,6 @@
   "unknown": {
     "hydration_liters": 2.5,
     "micronutrients": ["balanced_multivitamin_discuss_with_coach"],
-    "clinical_rationale": "Baseline balanced nutritional plate adhering to standard ISSN female athlete macros.",
     "meal_templates": [
       { "meal": "general", "focus": "Balanced plate", "examples": ["Half plate vegetables", "Quarter protein", "Quarter carbs"] }
     ],
