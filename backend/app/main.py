@@ -29,15 +29,25 @@ async def lifespan(app: FastAPI):
     Path(settings.artifacts_dir).mkdir(parents=True, exist_ok=True)
     Path(settings.storage_dir / "uploads").mkdir(parents=True, exist_ok=True)
     Base.metadata.create_all(bind=engine)
+
     try:
         from scripts.seed_demo import seed
         seed()
     except Exception as e:
         print(f"Auto-seed: {e}")
+
     start_scheduler()
-    start_hardware_bridge()
+
+    if settings.hardware_bridge_enabled:
+        start_hardware_bridge()
+    else:
+        print("[Hardware Bridge] Disabled in this environment.")
+
     yield
-    stop_hardware_bridge()
+
+    if settings.hardware_bridge_enabled:
+        stop_hardware_bridge()
+
     shutdown_scheduler()
 
 

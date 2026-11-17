@@ -14,6 +14,8 @@ services:
         generateValue: true
       - key: SCHEDULER_ENABLED
         value: "true"
+      - key: HARDWARE_BRIDGE_ENABLED
+        value: "false"
 
 databases:
   - name: menstrual-health-db
