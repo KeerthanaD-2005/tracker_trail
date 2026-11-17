@@ -21,6 +21,7 @@ from app.routers import (
     wearables,
 )
 from app.services.scheduler_jobs import shutdown_scheduler, start_scheduler
+from app.services.hardware_bridge import start_hardware_bridge, stop_hardware_bridge
 
 
 @asynccontextmanager
@@ -34,7 +35,9 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"Auto-seed: {e}")
     start_scheduler()
+    start_hardware_bridge()
     yield
+    stop_hardware_bridge()
     shutdown_scheduler()
 
 

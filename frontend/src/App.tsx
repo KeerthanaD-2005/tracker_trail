@@ -70,13 +70,15 @@ export default function App() {
   // Fetch Dashboard & User Data
   const refreshDashboard = useCallback(async () => {
     try {
-      const data = await apiGet<Dashboard>("/dashboard");
+      const data = userId
+        ? await apiGet<Dashboard>(`/dashboard/${userId}`)
+        : await apiGet<Dashboard>("/dashboard");
       setDash(data);
       setUser(data.user);
     } catch {
       // offline or mock fallback
     }
-  }, []);
+  }, [userId]);
 
   const refreshReminders = useCallback(async () => {
     try {
@@ -91,6 +93,13 @@ export default function App() {
     if (userId) {
       refreshDashboard();
       refreshReminders();
+
+      // Poll every 3 seconds to keep hardware telemetry live on screen
+      const timer = setInterval(() => {
+        refreshDashboard();
+      }, 3000);
+
+      return () => clearInterval(timer);
     }
   }, [userId, refreshDashboard, refreshReminders]);
 

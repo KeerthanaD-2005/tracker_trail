@@ -420,6 +420,12 @@ export const DashboardTarotView: React.FC<DashboardTarotViewProps> = ({
                   <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
                     You got good rest last night. Your body is well-rested and has good stamina for whatever you choose to do today.
                   </p>
+                  {dash?.latest_wearable && (
+                    <div className="pt-1 flex flex-wrap gap-2 justify-center sm:justify-start text-xs text-secondary font-medium">
+                      <span>• Pulse: {dash.latest_wearable.resting_hr != null ? Math.round(Number(dash.latest_wearable.resting_hr)) : 74} BPM</span>
+                      <span>• Skin Temp: {dash.latest_wearable.skin_temp_c != null ? Number(dash.latest_wearable.skin_temp_c).toFixed(1) : "30.5"}°C</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

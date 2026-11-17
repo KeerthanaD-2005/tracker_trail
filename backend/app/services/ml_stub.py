@@ -73,4 +73,5 @@ def _wearable_dict(w: WearableSignal | None) -> dict | None:
         "resting_hr": w.resting_hr,
         "steps": w.steps,
         "workout_type": w.workout_type,
+        "raw": w.raw,
     }

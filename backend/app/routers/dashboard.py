@@ -12,24 +12,24 @@ from sqlalchemy.orm import Session
 
 
 
+from app.auth import get_current_user
 from app.database import get_db
-
 from app.models import CycleEntry, Notification, Recommendation, User
-
 from app.schemas import CycleOut, DashboardOut, UserOut
-
 from app.services import ml_stub, phase_service
-
-
 
 router = APIRouter(tags=["dashboard"])
 
 
-
+@router.get("/dashboard", response_model=DashboardOut)
+def dashboard_current_user(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> DashboardOut:
+    return dashboard(current_user.id, db)
 
 
 @router.get("/dashboard/{user_id}", response_model=DashboardOut)
-
 def dashboard(user_id: UUID, db: Session = Depends(get_db)) -> DashboardOut:
 
     user = db.get(User, user_id)

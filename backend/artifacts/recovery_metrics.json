@@ -1,32 +1,32 @@
 {
   "model_name": "Model 3: Endocrine Recovery Kinetics & Metabolic Strain Predictor",
   "recovery_regressor": {
-    "r2_score": 0.9878219366073608,
-    "mae_hours": 0.7537600994110107,
-    "rmse_hours": 0.9397428069918914,
-    "accuracy_within_1hr_pct": 70.91666666666666,
-    "accuracy_within_2hr_pct": 97.08333333333333,
+    "r2_score": 0.9878793954849243,
+    "mae_hours": 0.7522571086883545,
+    "rmse_hours": 0.9375231739994704,
+    "accuracy_within_1hr_pct": 71.41666666666666,
+    "accuracy_within_2hr_pct": 97.0,
     "feature_importance": {
-      "p_luteal": 0.3828291893005371,
-      "training_intensity_score": 0.22243425250053406,
-      "p_menstrual": 0.16227813065052032,
-      "p_follicular": 0.07358920574188232,
-      "p_ovulatory": 0.05179063230752945,
-      "fatigue": 0.04973631724715233,
-      "sleep_hours": 0.021551456302404404,
-      "hrv_ms": 0.020413625985383987,
-      "p_unknown": 0.014324628747999668,
-      "resting_hr": 0.0005043782875873148,
-      "body_weight_kg": 0.0001853628782555461,
-      "spo2_pct": 0.00018455264216754586,
-      "mood": 0.00017820720677264035
+      "p_luteal": 0.44028666615486145,
+      "training_intensity_score": 0.2107611447572708,
+      "p_menstrual": 0.15293869376182556,
+      "p_follicular": 0.06462989002466202,
+      "fatigue": 0.0474449060857296,
+      "p_ovulatory": 0.041365355253219604,
+      "sleep_hours": 0.020756104961037636,
+      "hrv_ms": 0.020352032035589218,
+      "p_unknown": 0.0007269462803378701,
+      "resting_hr": 0.00021475258108694106,
+      "mood": 0.00019412720575928688,
+      "body_weight_kg": 0.00017225733608938754,
+      "spo2_pct": 0.00015713648463133723
     }
   },
   "metabolic_regressor": {
-    "tdee_r2": 0.982170820236206,
-    "tdee_mae_kcal": 20.50205421447754,
-    "protein_mae_g": 2.0577385425567627,
-    "carbs_mae_g": 4.178118705749512
+    "tdee_r2": 0.9823711514472961,
+    "tdee_mae_kcal": 20.50349235534668,
+    "protein_mae_g": 2.051696300506592,
+    "carbs_mae_g": 4.185628414154053
   },
   "test_sample_size": 1200,
   "total_training_samples": 12000

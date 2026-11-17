@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 from uuid import UUID
 
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.schemas import PredictPhaseOut, RecommendOut
 from app.services import diet_engine, intensity_model, ml_stub, phase_service, recovery_model, workout_planner
 
@@ -91,6 +94,21 @@ def build_recommendation(db: Session, user_id: UUID) -> tuple[RecommendOut, Pred
         fatigue=fatigue,
         mood=mood,
     )
+
+    # Personalize predictions using the trained calibration profile from database wearable signals
+    cal_file = Path(settings.artifacts_dir) / f"calibration_{user_id}.json"
+    if cal_file.exists():
+        try:
+            with open(cal_file, "r", encoding="utf-8") as f:
+                cal = json.load(f)
+            weights = cal.get("ml_personalization_weights", {})
+            factor = float(weights.get("strain_tolerance_factor", 1.0))
+            intensity = int(round(min(95.0, max(30.0, intensity * factor))))
+            rec_mod = float(weights.get("recovery_window_modifier_hours", 0.0))
+            recovery = round(max(8.0, recovery + rec_mod), 1)
+            int_note = f"{int_note} (Calibrated on {cal.get('total_hardware_samples_trained', 0)} wearable database records)"
+        except Exception:
+            pass
     focus = _focus_key(phase_out.phase, intensity)
     macros = _macro_rules(phase_out.phase)
     dietary = diet_engine.build_dietary_bundle(phase_out.phase, macros)

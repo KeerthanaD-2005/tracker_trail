@@ -55,6 +55,23 @@ def _phase_transition_tick() -> None:
         db.close()
 
 
+def _personal_model_calibration_tick() -> None:
+    """Periodically trains and updates personalized ML parameters from stored wearable signals."""
+    if not settings.scheduler_enabled:
+        return
+    db = SessionLocal()
+    try:
+        from app.services.personalization_engine import train_personal_calibration
+        users = db.execute(select(User)).scalars().all()
+        for u in users:
+            train_personal_calibration(db, u.id)
+        log.info("Auto-calibrated personal ML models from stored database wearable signals.")
+    except Exception as exc:
+        log.warning("personal calibration tick failed: %s", exc)
+    finally:
+        db.close()
+
+
 def start_scheduler() -> None:
     global _scheduler
     if not settings.scheduler_enabled:
@@ -70,8 +87,15 @@ def start_scheduler() -> None:
         id="phase_transitions",
         replace_existing=True,
     )
+    _scheduler.add_job(
+        _personal_model_calibration_tick,
+        "interval",
+        hours=2,
+        id="personal_calibration",
+        replace_existing=True,
+    )
     _scheduler.start()
-    log.info("Background scheduler started (phase checks every 4h).")
+    log.info("Background scheduler started (phase checks every 4h, personal ML calibration every 2h).")
 
 
 def shutdown_scheduler() -> None:

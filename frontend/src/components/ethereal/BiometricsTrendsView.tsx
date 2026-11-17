@@ -25,6 +25,19 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
   // Calculate horizontal position for Day marker on SVG (0 to 1000px coordinate space)
   const markerX = Math.round((currentDay / cycleLength) * 1000);
 
+  // Extract dynamic telemetry from connected hardware (WearableSignal)
+  const latestWearable = dash?.latest_wearable as Record<string, any> | null;
+  const rawData = (latestWearable?.raw as Record<string, any>) || {};
+  const restingHr = latestWearable?.resting_hr != null ? Math.round(Number(latestWearable.resting_hr)) : 74;
+  const skinTemp = latestWearable?.skin_temp_c != null ? Number(latestWearable.skin_temp_c).toFixed(1) : "30.5";
+  const hrv = latestWearable?.hrv_ms != null ? Math.round(Number(latestWearable.hrv_ms)) : 68;
+  const spo2 = latestWearable?.spo2_pct != null ? Number(latestWearable.spo2_pct).toFixed(1) : "98.6";
+  const accelX = rawData.ax != null ? Number(rawData.ax).toFixed(1) : (rawData.accel_x != null ? Number(rawData.accel_x).toFixed(1) : "-2.6");
+  const accelY = rawData.ay != null ? Number(rawData.ay).toFixed(1) : (rawData.accel_y != null ? Number(rawData.accel_y).toFixed(1) : "-1.9");
+  const accelZ = rawData.az != null ? Number(rawData.az).toFixed(1) : (rawData.accel_z != null ? Number(rawData.accel_z).toFixed(1) : "9.7");
+  const alertStatus = rawData.alert ? String(rawData.alert) : "NORMAL";
+  const lastSyncTime = latestWearable?.recorded_at ? new Date(String(latestWearable.recorded_at)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null;
+
   // File upload state for wearable telemetry CSV
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -76,22 +89,22 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             {/* Live Device Status Capsule */}
             <div className="flex flex-col items-start md:items-end gap-2">
               <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-xl shadow-sm border border-surface-container-high/60">
-                <span className="w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(58,103,89,0.7)]" />
+                <span className={`w-2.5 h-2.5 rounded-full ${latestWearable ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse" : "bg-secondary shadow-[0_0_8px_rgba(58,103,89,0.7)]"}`} />
                 <span className="font-label-md text-label-md text-on-surface font-medium">
-                  Smart Sensor Connected
+                  {latestWearable ? "Wearable Hardware Connected" : "Smart Sensor Connected"}
                 </span>
                 <span className="text-on-surface-variant/40">|</span>
                 <span className="flex items-center gap-1 font-label-caps text-label-caps text-secondary font-semibold">
-                  <span className="material-symbols-outlined text-sm">battery_5_bar</span> 82%
+                  <span className="material-symbols-outlined text-sm">battery_5_bar</span> 88%
                 </span>
                 <span className="text-on-surface-variant/40">|</span>
                 <span className="font-label-caps text-label-caps text-on-surface-variant">
-                  Real-Time
+                  {alertStatus === "NORMAL" ? "Status: Normal" : "Status: Active Alert"}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps">
-                <span className="material-symbols-outlined text-xs text-primary">sync</span>
-                <span>Bluetooth sync active</span>
+                <span className="material-symbols-outlined text-xs text-primary animate-spin">sync</span>
+                <span>{lastSyncTime ? `Live Telemetry Synced at ${lastSyncTime}` : "Hardware telemetry ready"}</span>
               </div>
             </div>
           </section>
@@ -576,17 +589,17 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
               <div className="my-3">
                 <div className="flex items-baseline gap-2">
                   <span className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight">
-                    68
+                    {hrv}
                   </span>
                   <span className="font-label-md text-label-md text-on-surface-variant">ms</span>
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps">
                   <span className="material-symbols-outlined text-xs">trending_up</span>
-                  <span>+12% above your average</span>
+                  <span>Autonomic Recovery</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-secondary font-medium">Well-rested & relaxed</span>
+                <span className="text-secondary font-medium">Parasympathetic tone</span>
                 <span className="material-symbols-outlined text-sm text-secondary">check_circle</span>
               </div>
             </div>
@@ -595,7 +608,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Resting Heart Rate
+                  Heart Rate (Pulse)
                 </span>
                 <div className="w-8 h-8 rounded-full bg-primary-fixed/50 flex items-center justify-center text-primary">
                   <span className="material-symbols-outlined text-base">cardiology</span>
@@ -604,18 +617,18 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
               <div className="my-3">
                 <div className="flex items-baseline gap-2">
                   <span className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight">
-                    54
+                    {restingHr}
                   </span>
-                  <span className="font-label-md text-label-md text-on-surface-variant">bpm</span>
+                  <span className="font-label-md text-label-md text-on-surface-variant">BPM</span>
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-primary-fixed/40 text-primary font-label-caps text-label-caps">
-                  <span className="material-symbols-outlined text-xs">arrow_downward</span>
-                  <span>-2 bpm dip this morning</span>
+                  <span className="material-symbols-outlined text-xs">sensors</span>
+                  <span>HW-827 Pulse Sensor</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-primary font-medium">Calm & steady heart rhythm</span>
-                <span className="material-symbols-outlined text-sm text-primary">spa</span>
+                <span className="text-primary font-medium">Real-time pulse stream</span>
+                <span className="material-symbols-outlined text-sm text-primary">favorite</span>
               </div>
             </div>
 
@@ -623,7 +636,7 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Body Temperature
+                  Skin Temperature
                 </span>
                 <div className="w-8 h-8 rounded-full bg-tertiary-fixed/60 flex items-center justify-center text-tertiary">
                   <span className="material-symbols-outlined text-base">device_thermostat</span>
@@ -632,46 +645,50 @@ export const BiometricsTrendsView: React.FC<BiometricsTrendsViewProps> = ({
               <div className="my-3">
                 <div className="flex items-baseline gap-2">
                   <span className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight">
-                    36.3
+                    {skinTemp}
                   </span>
                   <span className="font-label-md text-label-md text-on-surface-variant">°C</span>
                 </div>
                 <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-caps text-label-caps">
-                  <span className="material-symbols-outlined text-xs">horizontal_rule</span>
-                  <span>Normal healthy baseline</span>
+                  <span className="material-symbols-outlined text-xs">thermostat</span>
+                  <span>DS18B20 Sensor</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span>Natural rise around Day 15</span>
-                <span className="font-label-caps text-label-caps text-tertiary font-medium">Steady</span>
+                <span>{Number(skinTemp) > 37.5 ? "High Temp Alert" : "Normal thermal zone"}</span>
+                <span className={`font-label-caps text-label-caps font-medium ${Number(skinTemp) > 37.5 ? "text-amber-600 font-bold" : "text-tertiary"}`}>
+                  {Number(skinTemp) > 37.5 ? "ELEVATED" : "OPTIMAL"}
+                </span>
               </div>
             </div>
 
-            {/* SpO2 */}
+            {/* MPU6050 Motion / Alert */}
             <div className="rounded-xl bg-surface-container-lowest/80 backdrop-blur-xl p-5 shadow-sm flex flex-col justify-between group hover:shadow-md transition-all border border-surface-container-high/60">
               <div className="flex items-center justify-between">
                 <span className="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
-                  Blood Oxygen
+                  Motion & Alert Status
                 </span>
                 <div className="w-8 h-8 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined text-base">air</span>
+                  <span className="material-symbols-outlined text-base">screen_rotation</span>
                 </div>
               </div>
               <div className="my-3">
                 <div className="flex items-baseline gap-2">
-                  <span className="font-display-hero text-3xl sm:text-4xl text-on-surface font-semibold tracking-tight">
-                    98.6
+                  <span className="font-display-hero text-xl sm:text-2xl text-on-surface font-semibold tracking-tight">
+                    X:{accelX} Y:{accelY}
                   </span>
-                  <span className="font-label-md text-label-md text-on-surface-variant">%</span>
                 </div>
-                <div className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps">
-                  <span className="material-symbols-outlined text-xs">done_all</span>
-                  <span>Sensor synced</span>
+                <div className="text-xs text-on-surface-variant mt-0.5">
+                  Z:{accelZ} m/s² (MPU6050)
+                </div>
+                <div className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-label-caps text-label-caps">
+                  <span className="material-symbols-outlined text-xs">{alertStatus === "NORMAL" ? "check_circle" : "warning"}</span>
+                  <span>Alert: {alertStatus}</span>
                 </div>
               </div>
               <div className="pt-2 flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm border-t border-surface-container/60">
-                <span className="text-secondary font-medium">Great oxygen levels</span>
-                <span className="material-symbols-outlined text-sm text-secondary">verified</span>
+                <span className="text-secondary font-medium">Accelerometer actigraphy</span>
+                <span className="material-symbols-outlined text-sm text-secondary">motion_sensor_active</span>
               </div>
             </div>
           </section>

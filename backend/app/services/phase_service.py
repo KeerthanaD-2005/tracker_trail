@@ -225,10 +225,24 @@ def infer_phase(
     phase = _phase_from_day(day_in_cycle, cycle_len)
     irr = _irregularity_score(db, user_id)
 
+    # Personalize prediction using continuous wearable telemetry stored in database
+    model_note = "Cycle rhythm calculated from your logged cycle intervals."
+    try:
+        from app.services.personalization_engine import get_user_biometric_profile
+        profile = get_user_biometric_profile(db, user_id)
+        if profile.get("total_samples", 0) > 0:
+            if 12 <= day_in_cycle <= 18 and profile.get("thermal_shift_detected"):
+                phase = "luteal"
+                model_note = f"Personalized by hardware: Post-ovulatory thermal elevation (+{profile['temp_delta_c']}°C) confirmed from your database sensor records."
+            else:
+                model_note = f"Personalized by hardware: Synchronized with your resting HR ({profile['current_rhr']} BPM) and skin temp ({profile['current_temp']}°C)."
+    except Exception:
+        pass
+
     return PredictPhaseOut(
         phase=phase,
         day_in_cycle=day_in_cycle,
         cycle_length_assumed=cycle_len,
         irregularity_hint=irr,
-        model_note="Cycle rhythm calculated from your logged cycle intervals.",
+        model_note=model_note,
     )

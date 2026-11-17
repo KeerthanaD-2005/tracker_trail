@@ -1,0 +1,24 @@
+{
+  "user_id": "82ab98b1-7244-4a6f-b855-e1840b772d17",
+  "calibration_timestamp": "2026-11-14T16:13:39.302919+00:00",
+  "total_hardware_samples_trained": 1400,
+  "baselines": {
+    "resting_hr": 64.1,
+    "skin_temp_c": 26.18,
+    "hrv_ms": 68.0,
+    "spo2_pct": 98.0,
+    "daily_steps": 4849
+  },
+  "personalized_kinetics": {
+    "max_heart_rate_estimated": 198,
+    "heart_rate_reserve_bpm": 133.9,
+    "vagal_recovery_index": 1.061,
+    "luteal_thermal_threshold_c": 26.53
+  },
+  "ml_personalization_weights": {
+    "strain_tolerance_factor": 1.18,
+    "metabolic_burn_multiplier": 1.0,
+    "recovery_window_modifier_hours": -2.0
+  },
+  "status": "Successfully trained and integrated into prediction pipeline"
+}

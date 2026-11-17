@@ -315,3 +315,18 @@ def _generate_health_guidance(phase: str, day: int, message: str) -> str:
         "Ask me anything about meals, training adjustments, or symptom relief!"
     )
 
+
+@router.get("/ml/biometric-profile/{user_id}")
+def get_personal_biometrics(user_id: UUID, db: Session = Depends(get_db)):
+    """Returns the user's historical physiological baseline extracted from database wearable signals."""
+    from app.services.personalization_engine import get_user_biometric_profile
+    return get_user_biometric_profile(db, user_id)
+
+
+@router.post("/ml/calibrate-personal/{user_id}")
+def calibrate_models_for_user(user_id: UUID, db: Session = Depends(get_db)):
+    """Trains/calibrates the ML models specifically using the user's stored database wearable signals."""
+    from app.services.personalization_engine import train_personal_calibration
+    return train_personal_calibration(db, user_id)
+
+
